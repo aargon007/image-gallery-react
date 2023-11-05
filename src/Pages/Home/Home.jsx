@@ -54,30 +54,7 @@ const Home = () => {
     ])
     // selected images
     const [selectedImages, setSelectedImages] = useState(null);
-
-    const onDragEndColumns = (result) => {
-        // Dropped outside the list
-		if (!result.destination) return;
-
-		const { source, destination } = result;
-
-		// Re-ordering the images array
-        const newImages = Array.from(images);
-        const [reorderedItem] = newImages.splice(source.index, 1);
-        newImages.splice(destination.index, 0, reorderedItem);
     
-        // Setting the state to the new images order
-        setImages(newImages);
-
-	};
-
-	// Helper function to reorder an array
-	const reorderArray = (array, startIndex, endIndex) => {
-		const result = [...array];
-		const [removed] = result.splice(startIndex, 1);
-		result.splice(endIndex, 0, removed);
-		return result;
-	};
 	return (
 		<div className="bg-[#EDF2F7]">
 			{/* main container */}

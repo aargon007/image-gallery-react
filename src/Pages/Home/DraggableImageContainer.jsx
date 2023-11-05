@@ -26,7 +26,7 @@ const LargeFirstTile = () => (
 			if (index === 0) {
 				return {
 					fontSize: "2rem",
-					padding: "36px 40px",
+					// padding: "36px 40px",
 				};
 			}
 

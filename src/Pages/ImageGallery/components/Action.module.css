@@ -6,7 +6,7 @@
 	justify-content: center;
 	flex: 0 0 auto;
 	touch-action: none;
-	cursor: var(--cursor, pointer);
+	cursor: pointer; /* Replace var(--cursor, pointer) with "pointer" */
 	border-radius: 5px;
 	border: none;
 	outline: none;
@@ -17,7 +17,12 @@
 
 @media (hover: hover) {
 	.Action:hover {
-		background-color: var(--action-background, rgba(0, 0, 0, 0.05));
+		background-color: rgba(
+			0,
+			0,
+			0,
+			0.05
+		); /* Replace var(--action-background, rgba(0, 0, 0, 0.05)) with rgba(0, 0, 0, 0.05) */
 	}
 	.Action:hover svg {
 		fill: #6f7b88;
@@ -33,14 +38,19 @@
 }
 
 .Action:active {
-	background-color: var(--background, rgba(0, 0, 0, 0.05));
+	background-color: rgba(
+		0,
+		0,
+		0,
+		0.05
+	); /* Replace var(--background, rgba(0, 0, 0, 0.05)) with rgba(0, 0, 0, 0.05) */
 }
 
 .Action:active svg {
-	fill: var(--fill, #788491);
+	fill: #788491; /* Replace var(--fill, #788491) with #788491 */
 }
 
 .Action:focus-visible {
 	outline: none;
-	box-shadow: 0 0 0 2px rgba(255, 255, 255, 0), 0 0px 0px 2px #4c9ffe; /* The SCSS variable $focused-outline-color is replaced with its hex value */
+	box-shadow: 0 0 0 2px rgba(255, 255, 255, 0), 0 0px 0px 2px #4c9ffe;
 }

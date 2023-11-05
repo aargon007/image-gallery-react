@@ -10,16 +10,16 @@
 	border-radius: 5px;
 	min-height: 200px;
 	transition: background-color 350ms ease;
-	grid-template-columns: repeat(var(--columns, 1), 1fr);
+	grid-template-columns: repeat(1, 1fr); /* Replaced var(--columns, 1) with 1 */
+}
 
-	&:after {
-		content: "";
-		height: 10px;
-		grid-column-start: span var(--columns, 1);
-	}
+.List:after {
+	content: "";
+	height: 10px;
+	grid-column-start: span 1; /* Replaced var(--columns, 1) with 1 */
+}
 
-	&.horizontal {
-		width: 100%;
-		grid-auto-flow: column;
-	}
+.List.horizontal {
+	width: 100%;
+	grid-auto-flow: column;
 }

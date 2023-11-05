@@ -99,7 +99,8 @@ export const Item = memo(
 						{...props}
 						tabIndex={!handle ? 0 : undefined}
 					>
-						{value}
+						{/* {value.id} */}
+						<img src={value.srcPath} alt="" className="w-full h-full rounded-[4px]"/>
 						<span className={styles.Actions}>
 							{onRemove ? (
 								<Remove className={styles.Remove} onClick={onRemove} />

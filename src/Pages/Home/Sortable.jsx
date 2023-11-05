@@ -25,8 +25,55 @@ import { Item } from "../ImageGallery/Item";
 const defaultInitializer = (index) => index;
 
 export function createRange(length, initializer = defaultInitializer) {
-  return [...new Array(length)].map((_, index) => initializer(index));
+	return [...new Array(length)].map((_, index) => initializer(index));
 }
+
+const images = [
+	{
+		id: "11",
+		srcPath: "/images/image-1.webp",
+	},
+	{
+		id: "22",
+		srcPath: "/images/image-2.webp",
+	},
+	{
+		id: "33",
+		srcPath: "/images/image-3.webp",
+	},
+	{
+		id: "44",
+		srcPath: "/images/image-4.webp",
+	},
+	{
+		id: "55",
+		srcPath: "/images/image-5.webp",
+	},
+	{
+		id: "66",
+		srcPath: "/images/image-6.webp",
+	},
+	{
+		id: "77",
+		srcPath: "/images/image-7.webp",
+	},
+	{
+		id: "88",
+		srcPath: "/images/image-8.webp",
+	},
+	{
+		id: "99",
+		srcPath: "/images/image-9.webp",
+	},
+	{
+		id: "100",
+		srcPath: "/images/image-10.jpeg",
+	},
+	{
+		id: "111",
+		srcPath: "/images/image-11.jpeg",
+	},
+];
 
 const dropAnimationConfig = {
 	sideEffects: defaultDropAnimationSideEffects({
@@ -71,7 +118,52 @@ export function Sortable({
 	wrapperStyle = () => ({}),
 }) {
 	const [items, setItems] = useState(
-		() => initialItems ?? createRange(itemCount, (index) => index + 1)
+		 [
+            {
+                id: "11",
+                srcPath: "/images/image-1.webp",
+            },
+            {
+                id: "22",
+                srcPath: "/images/image-2.webp",
+            },
+            {
+                id: "33",
+                srcPath: "/images/image-3.webp",
+            },
+            {
+                id: "44",
+                srcPath: "/images/image-4.webp",
+            },
+            {
+                id: "55",
+                srcPath: "/images/image-5.webp",
+            },
+            {
+                id: "66",
+                srcPath: "/images/image-6.webp",
+            },
+            {
+                id: "77",
+                srcPath: "/images/image-7.webp",
+            },
+            {
+                id: "88",
+                srcPath: "/images/image-8.webp",
+            },
+            {
+                id: "99",
+                srcPath: "/images/image-9.webp",
+            },
+            {
+                id: "100",
+                srcPath: "/images/image-10.jpeg",
+            },
+            {
+                id: "111",
+                srcPath: "/images/image-11.jpeg",
+            },
+        ]
 	);
 	const [activeId, setActiveId] = useState(null);
 	const sensors = useSensors(
@@ -174,7 +266,7 @@ export function Sortable({
 					<Container>
 						{items.map((value, index) => (
 							<SortableItem
-								key={value}
+								key={value.id}
 								id={value}
 								handle={handle}
 								index={index}
