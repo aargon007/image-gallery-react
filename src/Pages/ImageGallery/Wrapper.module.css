@@ -3,9 +3,9 @@
 	width: 100%;
 	box-sizing: border-box;
 	padding: 20px;
-	justify-content: flex-start;
+	/* justify-content: flex-start;
 
 	&.center {
 		justify-content: center;
-	}
+	} */
 }

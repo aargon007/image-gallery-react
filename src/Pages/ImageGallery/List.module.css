@@ -9,6 +9,7 @@
 	margin: 10px;
 	border-radius: 5px;
 	min-height: 200px;
+	cursor: pointer;
 	transition: background-color 350ms ease;
 	grid-template-columns: repeat(1, 1fr); /* Replaced var(--columns, 1) with 1 */
 }

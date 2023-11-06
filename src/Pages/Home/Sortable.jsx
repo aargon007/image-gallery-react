@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
 	closestCenter,
@@ -21,79 +21,20 @@ import {
 import { Wrapper } from "../ImageGallery/Wrapper";
 import { List } from "../ImageGallery/List";
 import { Item } from "../ImageGallery/Item";
-
-const defaultInitializer = (index) => index;
-
-export function createRange(length, initializer = defaultInitializer) {
-	return [...new Array(length)].map((_, index) => initializer(index));
-}
-
-const images = [
-	{
-		id: "11",
-		srcPath: "/images/image-1.webp",
-	},
-	{
-		id: "22",
-		srcPath: "/images/image-2.webp",
-	},
-	{
-		id: "33",
-		srcPath: "/images/image-3.webp",
-	},
-	{
-		id: "44",
-		srcPath: "/images/image-4.webp",
-	},
-	{
-		id: "55",
-		srcPath: "/images/image-5.webp",
-	},
-	{
-		id: "66",
-		srcPath: "/images/image-6.webp",
-	},
-	{
-		id: "77",
-		srcPath: "/images/image-7.webp",
-	},
-	{
-		id: "88",
-		srcPath: "/images/image-8.webp",
-	},
-	{
-		id: "99",
-		srcPath: "/images/image-9.webp",
-	},
-	{
-		id: "100",
-		srcPath: "/images/image-10.jpeg",
-	},
-	{
-		id: "111",
-		srcPath: "/images/image-11.jpeg",
-	},
-];
+import { ImageContext } from "../../Providers/ImageProvider";
 
 const dropAnimationConfig = {
 	sideEffects: defaultDropAnimationSideEffects({
 		styles: {
 			active: {
 				opacity: "0.5",
+				transition: "transform",
 			},
 		},
 	}),
 };
 
-const screenReaderInstructions = {
-	draggable: `
-    To pick up a sortable item, press the space bar.
-    While sorting, use the arrow keys to move the item.
-    Press space again to drop the item in its new position, or press escape to cancel.
-  `,
-};
-
-export function Sortable({
+export const Sortable = ({
 	activationConstraint,
 	animateLayoutChanges,
 	adjustScale = false,
@@ -116,56 +57,12 @@ export function Sortable({
 	style,
 	useDragOverlay = true,
 	wrapperStyle = () => ({}),
-}) {
-	const [items, setItems] = useState(
-		 [
-            {
-                id: "11",
-                srcPath: "/images/image-1.webp",
-            },
-            {
-                id: "22",
-                srcPath: "/images/image-2.webp",
-            },
-            {
-                id: "33",
-                srcPath: "/images/image-3.webp",
-            },
-            {
-                id: "44",
-                srcPath: "/images/image-4.webp",
-            },
-            {
-                id: "55",
-                srcPath: "/images/image-5.webp",
-            },
-            {
-                id: "66",
-                srcPath: "/images/image-6.webp",
-            },
-            {
-                id: "77",
-                srcPath: "/images/image-7.webp",
-            },
-            {
-                id: "88",
-                srcPath: "/images/image-8.webp",
-            },
-            {
-                id: "99",
-                srcPath: "/images/image-9.webp",
-            },
-            {
-                id: "100",
-                srcPath: "/images/image-10.jpeg",
-            },
-            {
-                id: "111",
-                srcPath: "/images/image-11.jpeg",
-            },
-        ]
-	);
+}) => {
+	// set images
+	const { images } = useContext(ImageContext);
+	const [items, setItems] = useState(images);
 	const [activeId, setActiveId] = useState(null);
+
 	const sensors = useSensors(
 		useSensor(MouseSensor, {
 			activationConstraint,
@@ -180,50 +77,30 @@ export function Sortable({
 	);
 	const isFirstAnnouncement = useRef(true);
 	const getIndex = (id) => items.indexOf(id);
-	const getPosition = (id) => getIndex(id) + 1;
 	const activeIndex = activeId ? getIndex(activeId) : -1;
-	const handleRemove = removable
-		? (id) => setItems((items) => items.filter((item) => item !== id))
-		: undefined;
-	const announcements = {
-		onDragStart({ active: { id } }) {
-			return `Picked up sortable item ${String(
-				id
-			)}. Sortable item ${id} is in position ${getPosition(id)} of ${
-				items.length
-			}`;
-		},
-		onDragOver({ active, over }) {
-			// In this specific use-case, the picked up item's `id` is always the same as the first `over` id.
-			// The first `onDragOver` event therefore doesn't need to be announced, because it is called
-			// immediately after the `onDragStart` announcement and is redundant.
-			if (isFirstAnnouncement.current === true) {
-				isFirstAnnouncement.current = false;
-				return;
-			}
 
-			if (over) {
-				return `Sortable item ${
-					active.id
-				} was moved into position ${getPosition(over.id)} of ${items.length}`;
-			}
+	const onDragOver = ({ active, over }) => {
+		if (active.id !== over.id) {
+			setItems((items) => {
+				const oldIndex = items.findIndex((item) => item.id === active.id);
+				let newIndex = items.findIndex((item) => item.id === over.id);
+				// re-order items
+				return arrayMove(items, oldIndex, newIndex);
+			});
+		}
+	};
 
-			return;
-		},
-		onDragEnd({ active, over }) {
-			if (over) {
-				return `Sortable item ${
-					active.id
-				} was dropped at position ${getPosition(over.id)} of ${items.length}`;
-			}
+	const onDragEnd = ({ active, over }) => {
+		setActiveId(null);
 
-			return;
-		},
-		onDragCancel({ active: { id } }) {
-			return `Sorting was cancelled. Sortable item ${id} was dropped and returned to position ${getPosition(
-				id
-			)} of ${items.length}.`;
-		},
+		if (active && over) {
+			const activeIndex = getIndex(active.id);
+			const overIndex = getIndex(over.id);
+
+			if (activeIndex !== overIndex) {
+				setItems((items) => reorderItems(items, activeIndex, overIndex));
+			}
+		}
 	};
 
 	useEffect(() => {
@@ -232,12 +109,13 @@ export function Sortable({
 		}
 	}, [activeId]);
 
+	// update images data
+	useEffect(() => {
+		setItems(images);
+	}, [images.length]);
+
 	return (
 		<DndContext
-			accessibility={{
-				announcements,
-				screenReaderInstructions,
-			}}
 			sensors={sensors}
 			collisionDetection={collisionDetection}
 			onDragStart={({ active }) => {
@@ -247,16 +125,8 @@ export function Sortable({
 
 				setActiveId(active.id);
 			}}
-			onDragEnd={({ over }) => {
-				setActiveId(null);
-
-				if (over) {
-					const overIndex = getIndex(over.id);
-					if (activeIndex !== overIndex) {
-						setItems((items) => reorderItems(items, activeIndex, overIndex));
-					}
-				}
-			}}
+			onDragOver={onDragOver}
+			onDragEnd={onDragEnd}
 			onDragCancel={() => setActiveId(null)}
 			measuring={measuring}
 			modifiers={modifiers}
@@ -264,9 +134,10 @@ export function Sortable({
 			<Wrapper style={style} center>
 				<SortableContext items={items} strategy={strategy}>
 					<Container>
+						{/* loop the images data  */}
 						{items.map((value, index) => (
 							<SortableItem
-								key={value.id}
+								key={index}
 								id={value}
 								handle={handle}
 								index={index}
@@ -274,12 +145,29 @@ export function Sortable({
 								wrapperStyle={wrapperStyle}
 								disabled={isDisabled(value)}
 								renderItem={renderItem}
-								onRemove={handleRemove}
 								animateLayoutChanges={animateLayoutChanges}
 								useDragOverlay={useDragOverlay}
 								getNewIndex={getNewIndex}
 							/>
 						))}
+						{/* add image - static */}
+						<div className="w-[170px] h-[170px] border-[2px] rounded border-gray-300 border-dashed bg-gray-50 flex items-center flex-col justify-center">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								strokeWidth={1.5}
+								stroke="currentColor"
+								className="w-6 h-6"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+								/>
+							</svg>
+							<div className="font-semibold text-gray-700">Add Images</div>
+						</div>
 					</Container>
 				</SortableContext>
 			</Wrapper>
@@ -317,9 +205,9 @@ export function Sortable({
 				: null}
 		</DndContext>
 	);
-}
+};
 
-export function SortableItem({
+export const SortableItem = ({
 	disabled,
 	animateLayoutChanges,
 	getNewIndex,
@@ -331,7 +219,7 @@ export function SortableItem({
 	renderItem,
 	useDragOverlay,
 	wrapperStyle,
-}) {
+}) => {
 	const {
 		active,
 		attributes,
@@ -385,4 +273,4 @@ export function SortableItem({
 			{...attributes}
 		/>
 	);
-}
+};

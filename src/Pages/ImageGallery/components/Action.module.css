@@ -6,7 +6,7 @@
 	justify-content: center;
 	flex: 0 0 auto;
 	touch-action: none;
-	cursor: pointer; /* Replace var(--cursor, pointer) with "pointer" */
+	cursor: pointer;
 	border-radius: 5px;
 	border: none;
 	outline: none;
@@ -17,12 +17,7 @@
 
 @media (hover: hover) {
 	.Action:hover {
-		background-color: rgba(
-			0,
-			0,
-			0,
-			0.05
-		); /* Replace var(--action-background, rgba(0, 0, 0, 0.05)) with rgba(0, 0, 0, 0.05) */
+		background-color: rgba(0, 0, 0, 0.05);
 	}
 	.Action:hover svg {
 		fill: #6f7b88;
@@ -38,16 +33,11 @@
 }
 
 .Action:active {
-	background-color: rgba(
-		0,
-		0,
-		0,
-		0.05
-	); /* Replace var(--background, rgba(0, 0, 0, 0.05)) with rgba(0, 0, 0, 0.05) */
+	background-color: rgba(0, 0, 0, 0.05);
 }
 
 .Action:active svg {
-	fill: #788491; /* Replace var(--fill, #788491) with #788491 */
+	fill: #788491;
 }
 
 .Action:focus-visible {

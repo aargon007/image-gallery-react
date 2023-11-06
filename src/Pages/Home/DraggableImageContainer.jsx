@@ -1,24 +1,18 @@
-import React from "react";
-import {
-	arraySwap,
-	defaultAnimateLayoutChanges,
-	rectSortingStrategy,
-	rectSwappingStrategy,
-} from "@dnd-kit/sortable";
+import { rectSortingStrategy } from "@dnd-kit/sortable";
 
 import { Sortable } from "./Sortable";
 import { GridContainer } from "../ImageGallery/GridContainer";
-
+// grid container
 const props = {
 	adjustScale: true,
-	Container: (props) => <GridContainer {...props} columns={5} />,
+	Container: (props) => <GridContainer {...props} />,
 	strategy: rectSortingStrategy,
 	wrapperStyle: () => ({
 		width: 140,
 		height: 140,
 	}),
 };
-
+// make first index larger
 const LargeFirstTile = () => (
 	<Sortable
 		{...props}
@@ -26,24 +20,23 @@ const LargeFirstTile = () => (
 			if (index === 0) {
 				return {
 					fontSize: "2rem",
-					// padding: "36px 40px",
 				};
 			}
-
 			return {};
 		}}
 		wrapperStyle={({ index }) => {
 			if (index === 0) {
 				return {
-					height: 288,
+					height: 350,
+					width: 350,
 					gridRowStart: "span 2",
 					gridColumnStart: "span 2",
 				};
 			}
 
 			return {
-				width: 140,
-				height: 140,
+				width: 170,
+				height: 170,
 			};
 		}}
 	/>
