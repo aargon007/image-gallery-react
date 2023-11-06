@@ -10,7 +10,7 @@ const Home = () => {
 	return (
 		<div className="bg-[#EDF2F7] min-h-screen cursor-default">
 			{/* main container */}
-			<div className="lg:w-[1000px] h-full mx-auto pt-5 px-5">
+			<div className="lg:w-[1000px] h-full mx-auto pt-5 sm:px-5">
 				<div className="bg-white rounded-lg shadow">
 					{/* top side */}
 					<div className="w-full px-[25px] py-[10px] border-b-2">
@@ -39,7 +39,7 @@ const Home = () => {
 						)}
 					</div>
 					{/* image container */}
-					<div className="w-full ">
+					<div className="w-full">
 						<DraggableImageContainer />
 					</div>
 				</div>

@@ -9,3 +9,9 @@
 		justify-content: center;
 	} */
 }
+
+@media (max-width: 576px) {
+	.Wrapper {
+		padding: 5px;
+	}
+}
